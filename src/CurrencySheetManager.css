@@ -1,0 +1,84 @@
+/* Styles pour le thème violet et noir */
+.container {
+    background-color: #1a202c;
+    color: #ffffff;
+    border-radius: 7px;
+  }
+  
+  .bg-gray-800 {
+    background-color: #2d3748;
+  }
+  
+  .border-gray-600 {
+    border-color: #4a5568;
+  }
+  
+  .bg-gray-700 {
+    background-color: #2a4365;
+  }
+  
+  .focus\:border-indigo-500:focus {
+    border-color: #667eea;
+  }
+  
+  .text-white {
+    color: #ffffff;
+  }
+  
+  .font-bold {
+    font-weight: bold;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1rem;
+  }
+  
+  .bg-indigo-600 {
+    background-color: #667eea;
+  }
+  
+  .hover\:bg-indigo-700:hover {
+    background-color: #5a67d8;
+  }
+  
+  .text-red-500 {
+    color: #f56565;
+  }
+  
+  .mt-2 {
+    margin-top: 0.5rem;
+  }
+  
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+  
+  .p-2 {
+    padding: 0.5rem;
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+  /* Styles pour les champs de saisie */
+input {
+  background-color: white;
+  color: #ffffff;
+  border-radius: 0.5rem; /* Ajoute des bords arrondis */
+  padding: 0.5rem;
+  border: none;
+}
+
+/* Styles pour le bouton */
+button {
+  background-color: #6b46c1; /* Couleur de fond violet */
+  color: #ffffff;
+  border-radius: 0.5rem; /* Ajoute des bords arrondis */
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #553c9a; /* Couleur de fond violet plus foncée au survol */
+}
