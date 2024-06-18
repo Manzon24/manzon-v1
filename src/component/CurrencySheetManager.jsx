@@ -1,135 +1,99 @@
-import { useState } from 'react';
-
-const Sheet = ({ currency, type, name }) => {
-  return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
-      <h3 className="text-lg font-bold mb-2">{name}</h3>
-      <p className="text-gray-700">Currency: {currency}</p>
-      <p className="text-gray-700">Type: {type}</p>
-    </div>
-  );
-};
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const CurrencySheetManager = () => {
-  const [sheets, setSheets] = useState([]);
-  const [newSheet, setNewSheet] = useState({
-    currency: '',
-    type: 'expense',
-    name: '',
-  });
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [sheets, setSheets] = useState(JSON.parse(localStorage.getItem('sheets')) || []);
+  const [currencies] = useState(JSON.parse(localStorage.getItem('currencies')) || ['USD', 'EUR', 'GBP']);
+  const [newSheet, setNewSheet] = useState({ currency: '', name: '' });
+  const [hasErrors, setHasErrors] = useState(false);
 
-  const [errors, setErrors] = useState({
-    currency: false,
-    name: false,
-  });
+  useEffect(() => {
+    if (id) {
+      const sheetToEdit = sheets.find(sheet => sheet.id === parseInt(id));
+      if (sheetToEdit) {
+        setNewSheet(sheetToEdit);
+      }
+    }
+  }, [id, sheets]);
 
-  const handleInputChange = (e) => {
-    setNewSheet({ ...newSheet, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: false });
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setNewSheet({ ...newSheet, [name]: value });
   };
 
-  const handleCreateSheet = () => {
+  const handleCreateOrUpdateSheet = () => {
     const { currency, name } = newSheet;
-    let hasErrors = false;
 
-    if (!currency.trim()) {
-      setErrors((prevErrors) => ({ ...prevErrors, currency: true }));
-      hasErrors = true;
+    if (!currency || !name) {
+      setHasErrors(true);
+      return;
     }
 
-    if (!name.trim()) {
-      setErrors((prevErrors) => ({ ...prevErrors, name: true }));
-      hasErrors = true;
+    setHasErrors(false);
+
+    let updatedSheets;
+    if (id) {
+      updatedSheets = sheets.map(sheet =>
+        sheet.id === parseInt(id) ? newSheet : sheet
+      );
+    } else {
+      const newSheetEntry = { ...newSheet, id: sheets.length > 0 ? sheets[sheets.length - 1].id + 1 : 1 };
+      updatedSheets = [...sheets, newSheetEntry];
     }
 
-    if (!hasErrors) {
-      setSheets([...sheets, newSheet]);
-      setNewSheet({ currency: '', type: 'expense', name: '' });
-    }
+    setSheets(updatedSheets);
+    localStorage.setItem('sheets', JSON.stringify(updatedSheets));
+    navigate('/sheets', { state: { sheets: updatedSheets } });
   };
 
   return (
-    <div className="container mx-auto py-8 w-1/2">
-      <h1 className="text-2xl font-bold mb-4">Currency Sheet Manager</h1>
+    <div className="container mx-auto py-10 w-1/2 bg-gray-800 rounded-lg px-8 py-6 relative">
+      <h1 className="text-3xl font-bold mb-4 text-purple-400">{id ? 'Edit' : 'Add'} Currency Sheet</h1>
 
-      <div className="bg-white  p-4 rounded-lg shadow-md mb-4">
-        <h2 className="text-lg font-bold mb-2">Create New Sheet</h2>
-        <div className="mb-4">
-          <label className="block font-bold mb-2" htmlFor="currency">
-            Currency
-          </label>
+      <div className="mb-4">
+        <label htmlFor="currency" className="block font-bold mb-2 text-white">Currency:</label>
+        <div className="flex">
           <select
-            className={`border rounded-lg p-2 w-full ${
-              errors.currency ? 'border-red-500' : ''
-            }`}
             id="currency"
             name="currency"
+            className="border rounded-md p-2 w-full text-black"
             value={newSheet.currency}
             onChange={handleInputChange}
           >
             <option value="">Select a currency</option>
-            <option value="USD">XAF</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-            <option value="JPY">JPY</option>
-            <option value="CHF">CHF</option>
-          </select>
-          {errors.currency && (
-            <p className="text-red-500 mt-2">Currency is required.</p>
-          )}
-        </div>
-        <div className="mb-4">
-          <label className="block font-bold mb-2" htmlFor="type">
-            Type
-          </label>
-          <select
-            className="border rounded-lg p-2 w-full"
-            id="type"
-            name="type"
-            value={newSheet.type}
-            onChange={handleInputChange}
-          >
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
+            {currencies.map((currency, index) => (
+              <option key={index} value={currency}>{currency}</option>
+            ))}
           </select>
         </div>
-        <div className="mb-4">
-          <label className="block font-bold mb-2" htmlFor="name">
-            Name
-          </label>
-          <input
-            className={`border rounded-lg p-2 w-full ${
-              errors.name ? 'border-red-500' : ''
-            }`}
-            type="text"
-            id="name"
-            name="name"
-            value={newSheet.name}
-            onChange={handleInputChange}
-          />
-          {errors.name && (
-            <p className="text-red-500 mt-2">Name is required.</p>
-          )}
-        </div>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleCreateSheet}
-        >
-          Create Sheet
-        </button>
+        {hasErrors && !newSheet.currency && (
+          <p className="text-red-500 mt-2">Please select a currency.</p>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {sheets.map((sheet, index) => (
-          <Sheet
-            key={index}
-            currency={sheet.currency}
-            type={sheet.type}
-            name={sheet.name}
-          />
-        ))}
+      <div className="mb-4">
+        <label htmlFor="name" className="block font-bold mb-2 text-white">Name:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          className="border rounded-md p-2 w-full text-black"
+          value={newSheet.name}
+          onChange={handleInputChange}
+        />
+        {hasErrors && !newSheet.name && (
+          <p className="text-red-500 mt-2">Please enter a name.</p>
+        )}
       </div>
+
+      <button
+        onClick={handleCreateOrUpdateSheet}
+        className="bg-purple-600 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded"
+      >
+        {id ? 'Update Sheet' : 'Create Sheet'}
+      </button>
     </div>
   );
 };
