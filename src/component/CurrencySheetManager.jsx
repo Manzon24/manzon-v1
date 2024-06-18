@@ -6,8 +6,9 @@ const CurrencySheetManager = () => {
   const navigate = useNavigate();
   const [sheets, setSheets] = useState(JSON.parse(localStorage.getItem('sheets')) || []);
   const [currencies] = useState(JSON.parse(localStorage.getItem('currencies')) || ['USD', 'EUR', 'GBP']);
-  const [newSheet, setNewSheet] = useState({ currency: '', name: '' });
+  const [newSheet, setNewSheet] = useState({ currency: '', name: '', tasks: [] });
   const [hasErrors, setHasErrors] = useState(false);
+  //const [newCurrency, setNewCurrency] = useState('');
 
   useEffect(() => {
     if (id) {
@@ -39,7 +40,7 @@ const CurrencySheetManager = () => {
         sheet.id === parseInt(id) ? newSheet : sheet
       );
     } else {
-      const newSheetEntry = { ...newSheet, id: sheets.length > 0 ? sheets[sheets.length - 1].id + 1 : 1 };
+      const newSheetEntry = { ...newSheet, id: sheets.length + 1 };
       updatedSheets = [...sheets, newSheetEntry];
     }
 
