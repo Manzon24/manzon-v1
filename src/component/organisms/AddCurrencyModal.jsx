@@ -1,6 +1,8 @@
 
 import { useState } from 'react';
 
+
+//TODO to components
 const AddCurrencyModal = ({ isOpen, onClose, onAddCurrency }) => {
   const [newCurrency, setNewCurrency] = useState('');
 

@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import Button from '../atoms/Button';
+import Input from '../atoms/Input';
+import Select from '../atoms/Select';
 
 const AddExpenseForm = () => {
   const { id } = useParams();
@@ -33,10 +36,8 @@ const AddExpenseForm = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="amount" className="block font-bold mb-2 text-white">Amount:</label>
-          <input
-            type="number"
+          <Input
             id="amount"
-            className="border rounded-md p-2 w-full text-black"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             required
@@ -45,10 +46,8 @@ const AddExpenseForm = () => {
 
         <div className="mb-4">
           <label htmlFor="description" className="block font-bold mb-2 text-white">Description:</label>
-          <input
-            type="text"
+          <Input
             id="description"
-            className="border rounded-md p-2 w-full text-black"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
@@ -57,10 +56,8 @@ const AddExpenseForm = () => {
 
         <div className="mb-4">
           <label htmlFor="category" className="block font-bold mb-2 text-white">Category:</label>
-          <input
-            type="text"
+          <Input
             id="category"
-            className="border rounded-md p-2 w-full text-black"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             required
@@ -69,21 +66,23 @@ const AddExpenseForm = () => {
 
         <div className="mb-4">
           <label htmlFor="type" className="block font-bold mb-2 text-white">Type:</label>
-          <select
-            id="type"
-            className="border rounded-md p-2 w-full text-black"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            required
-          >
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
-          </select>
+          <Select
+          id="type"
+          name="Type"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          options={[
+            { value: 'expense', label: 'Expense' },
+            { value: 'income', label: 'Income' }
+          ]}
+          required
+        />
+
         </div>
 
-        <button type="submit" className="bg-purple-600 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded">
+        <Button type="submit" className="bg-purple-600 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded">
           Add
-        </button>
+        </Button>
       </form>
     </div>
   );

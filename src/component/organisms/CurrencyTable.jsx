@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 const CurrencyTable = ({ currencies, setCurrencies }) => {
