@@ -21,6 +21,7 @@ const CurrencySheetManager = () => {
       }
     }
   }, [id, sheets]);
+  //Refactoring
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
